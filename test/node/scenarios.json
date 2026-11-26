@@ -1,0 +1,16 @@
+{
+    "alpine": {
+        "image": "mcr.microsoft.com/devcontainers/base:alpine",
+        "features": {
+            "node": {}
+        }
+    },
+    "alpine_minimal": {
+        "build": {
+            "dockerfile": "Dockerfile.alpine"
+        },
+        "features": {
+            "node": {}
+        }
+    }
+}
