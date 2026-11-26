@@ -1,0 +1,24 @@
+{
+    "custom_user": {
+        "image": "mcr.microsoft.com/devcontainers/base:focal",
+        "features": {
+            "ghcr.io/devcontainers/features/common-utils:1": {
+                "installZsh": false,
+                "installOhMyZsh": false,
+                "upgradePackages": false,
+                "username": "octocat"
+            },
+            "claude": {}
+        },
+        "remoteUser": "octocat"
+    },
+    "no_managed": {
+        "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+        "features": {
+            "claude": {
+                "managed-claude-md": false,
+                "managed-settings-json": false
+            }
+        }
+    }
+}
