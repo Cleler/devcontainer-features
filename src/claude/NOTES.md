@@ -16,6 +16,10 @@ directory, so every other devcontainer is already authenticated.
 
 - Claude Code itself comes from the official [`claude-code`](https://github.com/anthropics/devcontainer-features)
   feature (declared in `dependsOn`), and the `anthropic.claude-code` VS Code extension is installed.
+- Claude Code needs Node.js and npm. The `claude-code` feature tries to install them itself, but that is not reliable
+  on every distribution (on recent Ubuntu the `nodejs` package comes without `npm`), so the official
+  [`node`](https://github.com/devcontainers/features/tree/main/src/node) feature is declared in `dependsOn` too.
+  To choose the Node.js version, declare the `node` feature yourself in your `devcontainer.json`.
 - The host directory `~/.claude/devcontainer` is bind-mounted on `/home/vscode/.claude` and used as
   `CLAUDE_CONFIG_DIR`. It is shared by every devcontainer using this feature, so settings, history and
   authentication persist from one container to another. It is independent from the host's own `~/.claude`.
