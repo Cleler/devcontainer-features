@@ -13,14 +13,17 @@ jobs:
     strategy:
       matrix:
         features:
-          - color
-          - hello
+          - claude
+          - claude-plugin-devcontainer
         baseImage:
           - debian:latest
           - ubuntu:latest
           - mcr.microsoft.com/devcontainers/base:ubuntu
     steps:
       - uses: actions/checkout@v4
+
+      - name: "Create the host dir mounted by the 'claude' feature"
+        run: mkdir -p ~/.claude/devcontainer
 
       - name: "Install latest devcontainer CLI"
         run: npm install -g @devcontainers/cli
@@ -34,10 +37,13 @@ jobs:
     strategy:
       matrix:
         features:
-          - color
-          - hello
+          - claude
+          - claude-plugin-devcontainer
     steps:
       - uses: actions/checkout@v4
+
+      - name: "Create the host dir mounted by the 'claude' feature"
+        run: mkdir -p ~/.claude/devcontainer
 
       - name: "Install latest devcontainer CLI"
         run: npm install -g @devcontainers/cli
@@ -50,6 +56,9 @@ jobs:
     continue-on-error: true
     steps:
       - uses: actions/checkout@v4
+
+      - name: "Create the host dir mounted by the 'claude' feature"
+        run: mkdir -p ~/.claude/devcontainer
 
       - name: "Install latest devcontainer CLI"
         run: npm install -g @devcontainers/cli
