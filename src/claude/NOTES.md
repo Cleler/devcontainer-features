@@ -20,6 +20,9 @@ directory, so every other devcontainer is already authenticated.
   on every distribution (on recent Ubuntu the `nodejs` package comes without `npm`), so the official
   [`node`](https://github.com/devcontainers/features/tree/main/src/node) feature is declared in `dependsOn` too.
   To choose the Node.js version, declare the `node` feature yourself in your `devcontainer.json`.
+- Use a Dev Containers base image (`mcr.microsoft.com/devcontainers/base:ubuntu` or `:debian`, or a language image).
+  On a bare `debian` or `ubuntu` image, Node.js installed by the `node` feature fails to start for lack of `libatomic1`:
+  install it in your image first.
 - The host directory `~/.claude/devcontainer` is bind-mounted on `/home/vscode/.claude` and used as
   `CLAUDE_CONFIG_DIR`. It is shared by every devcontainer using this feature, so settings, history and
   authentication persist from one container to another. It is independent from the host's own `~/.claude`.
