@@ -4,13 +4,5 @@
         "features": {
             "node": {}
         }
-    },
-    "alpine_minimal": {
-        "build": {
-            "dockerfile": "Dockerfile.alpine"
-        },
-        "features": {
-            "node": {}
-        }
     }
 }
