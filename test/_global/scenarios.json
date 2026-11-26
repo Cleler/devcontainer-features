@@ -1,13 +1,9 @@
 {
-    "color_and_hello": {
+    "claude_and_plugin": {
         "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
         "features": {
-            "color": {
-                "favorite": "purple"
-            },
-            "hello": {
-                "greeting": "Greetings"
-            }
+            "claude": {},
+            "claude-plugin-devcontainer": {}
         }
     }
 }
