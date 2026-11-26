@@ -1,5 +1,5 @@
 {
-    "my_favorite_color_is_green": {
+    "custom_user": {
         "image": "mcr.microsoft.com/devcontainers/base:focal",
         "features": {
             "ghcr.io/devcontainers/features/common-utils:1": {
@@ -8,25 +8,16 @@
                 "upgradePackages": false,
                 "username": "octocat"
             },
-            "color": {
-                "favorite": "green"
-            }
+            "claude": {}
         },
         "remoteUser": "octocat"
     },
-    "gold": {
+    "no_managed": {
         "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
         "features": {
-            "color": {
-                "favorite": "gold"
-            }
-        }
-    },
-    "green": {
-        "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
-        "features": {
-            "color": {
-                "favorite": "green"
+            "claude": {
+                "managed-claude-md": false,
+                "managed-settings-json": false
             }
         }
     }
