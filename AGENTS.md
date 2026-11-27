@@ -22,6 +22,7 @@ test/_global/                  # scenarios that combine several features (scenar
 
 | Feature | Depends on | Description |
 | ------- | ---------- | ----------- |
+| `docker-outside-of-docker` | — | Docker CLI (Buildx, Compose) using the host's Docker socket |
 | `node` | — | Node.js via nvm, yarn, pnpm |
 | `claude-code` | `node` | Claude Code CLI |
 | `claude` | `claude-code` | Claude Code (CLI + VS Code extension), configuration shared between all devcontainers |

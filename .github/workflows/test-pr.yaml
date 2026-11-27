@@ -30,6 +30,10 @@ jobs:
               - './**/claude-plugin-devcontainer/**'
               - '!**/README.md'
               - '!**/NOTES.md'
+            docker-outside-of-docker:
+              - './**/docker-outside-of-docker/**'
+              - '!**/README.md'
+              - '!**/NOTES.md'
             node:
               - './**/node/**'
               - '!**/README.md'
