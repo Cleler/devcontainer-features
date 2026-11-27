@@ -1,8 +1,9 @@
 name: "CI - Test Features"
 on:
-  push:
-    branches:
-      - main
+  # Weekly (Monday, 05:00 UTC): the PRs are already tested, this catches what comes from outside
+  # (new base images, new upstream versions of the tools...)
+  schedule:
+    - cron: '0 5 * * 1'
   workflow_dispatch:
     inputs:
       features:
