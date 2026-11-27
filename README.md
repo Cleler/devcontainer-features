@@ -64,7 +64,7 @@ Publishing is automatic, handled by the [Automated Maintenance](.github/workflow
 - both go in one pull request (`automated-maintenance-<date>`), merged automatically once its checks pass. Its `release / check` publishes the new versions to GHCR, with an annotated tag per feature (`feature_<id>_<version>`, whose message says what changed) and a GitHub release gathering them;
 - a feature whose version has no tag yet (a new feature, a version you incremented yourself) is published directly.
 
-It needs a `BOT_TOKEN` secret (a token that triggers workflows, a GITHUB_TOKEN doesn't) and *Allow auto-merge* in the repository settings. To publish by hand:
+It needs a GitHub App (secrets `APP_ID` and `APP_PRIVATE_KEY`, with the *Contents* and *Pull requests* write permissions, installed on this repository: a `GITHUB_TOKEN` can't be used, what it does triggers no workflow) and *Allow auto-merge* in the repository settings. To publish by hand:
 To publish by hand:
 
 ```bash
