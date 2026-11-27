@@ -29,3 +29,23 @@ jobs:
         with:
           validate-only: "true"
           base-path-to-features: "./src"
+
+  # If the lint or the validation fails, the other runs of this commit (tests...) are useless: cancel them
+  cancel-others:
+    needs: [shellchecker, validate]
+    if: failure()
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - name: "Cancel the other runs of this commit"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          for id in $(gh run list --repo "${GITHUB_REPOSITORY}" --commit "${SHA}" --json databaseId,status -q '.[] | select(.status != "completed") | .databaseId'); do
+            if [ "${id}" != "${GITHUB_RUN_ID}" ]; then
+              echo "Cancelling run ${id}"
+              gh run cancel "${id}" --repo "${GITHUB_REPOSITORY}" || true
+            fi
+          done
