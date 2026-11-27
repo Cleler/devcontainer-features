@@ -28,7 +28,7 @@ Add the features to your `devcontainer.json`:
 
 ## Requirements
 
-- The `claude` feature installs Claude Code through the official [`claude-code`](https://github.com/anthropics/devcontainer-features) feature, which needs Node.js and installs it if it isn't already present.
+- The `claude` feature installs Claude Code through the [`claude-code`](src/claude-code) feature of this repository (a copy of the official one), which installs Node.js first with the [`node`](src/node) feature (Alpine included).
 - The host directory shared by all devcontainers must exist before a container is created (Docker refuses to bind-mount a missing path):
 
 ```bash

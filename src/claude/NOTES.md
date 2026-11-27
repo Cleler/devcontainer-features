@@ -14,13 +14,14 @@ directory, so every other devcontainer is already authenticated.
 
 ## How it works
 
-- Claude Code itself comes from the official [`claude-code`](https://github.com/anthropics/devcontainer-features)
-  feature (declared in `dependsOn`), and the `anthropic.claude-code` VS Code extension is installed.
-- Claude Code needs Node.js and npm. The `claude-code` feature tries to install them itself, but that is not reliable
-  on every distribution (on recent Ubuntu the `nodejs` package comes without `npm`), so the official
-  [`node`](https://github.com/devcontainers/features/tree/main/src/node) feature is declared in `dependsOn` too.
-  To choose the Node.js version, declare the `node` feature yourself in your `devcontainer.json`.
-- Use a Dev Containers base image (`mcr.microsoft.com/devcontainers/base:ubuntu` or `:debian`, or a language image).
+- Claude Code itself comes from the [`claude-code`](../claude-code) feature of this repository (declared in `dependsOn`),
+  and the `anthropic.claude-code` VS Code extension is installed. It is a copy of the official
+  [`claude-code`](https://github.com/anthropics/devcontainer-features/tree/main/src/claude-code) feature that depends on
+  the [`node`](../node) feature of this repository: Node.js and npm are installed first, on Debian, Ubuntu and Alpine
+  (the official `node` feature doesn't support Alpine, and the official `claude-code` can't be ordered after another `node`).
+  To choose the Node.js version, declare the `node` feature yourself in your `devcontainer.json`
+  (`ghcr.io/Cleler/devcontainer-features/node:1`).
+- Use a Dev Containers base image (`mcr.microsoft.com/devcontainers/base:ubuntu`, `:debian` or `:alpine`, or a language image).
   On a bare `debian` or `ubuntu` image, Node.js installed by the `node` feature fails to start for lack of `libatomic1`:
   install it in your image first.
 - The host directory `~/.claude/devcontainer` is bind-mounted on `/home/vscode/.claude` and used as
