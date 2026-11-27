@@ -85,7 +85,7 @@
             "node": {
                 "version": "lts"
             },
-            "common-utils": {
+            "ghcr.io/devcontainers/features/common-utils:2": {
                 "configureZshAsDefaultShell": true
             }
         }
@@ -96,7 +96,7 @@
             "node": {
                 "version": "lts"
             },
-            "common-utils": {
+            "ghcr.io/devcontainers/features/common-utils:2": {
                 "configureZshAsDefaultShell": true
             }
         }
