@@ -1,9 +1,7 @@
 name: "CI - Lint and Validate"
+# Called first by test-pr.yaml and test-all.yaml: nothing else runs until it has succeeded.
 on:
-  push:
-    branches:
-      - main
-  pull_request:
+  workflow_call:
   workflow_dispatch:
 
 jobs:
