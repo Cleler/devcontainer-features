@@ -1,8 +1,6 @@
 name: "CI - Lint and Validate"
 on:
-  push:
-    branches:
-      - main
+  # Only on the PRs: they can't be merged until these checks pass, so there is no need to run them again on main
   pull_request:
   workflow_dispatch:
 
