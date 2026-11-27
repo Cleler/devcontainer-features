@@ -14,11 +14,26 @@ jobs:
       - uses: dorny/paths-filter@v4
         id: filter
         with:
+          # A file counts if it is in the feature (or its tests) AND it is neither a README nor a NOTES:
+          # changing only the documentation doesn't need any test
+          predicate-quantifier: every
           filters: |
-            claude: ./**/claude/**
-            claude-code: ./**/claude-code/**
-            claude-plugin-devcontainer: ./**/claude-plugin-devcontainer/**
-            node: ./**/node/**
+            claude:
+              - './**/claude/**'
+              - '!**/README.md'
+              - '!**/NOTES.md'
+            claude-code:
+              - './**/claude-code/**'
+              - '!**/README.md'
+              - '!**/NOTES.md'
+            claude-plugin-devcontainer:
+              - './**/claude-plugin-devcontainer/**'
+              - '!**/README.md'
+              - '!**/NOTES.md'
+            node:
+              - './**/node/**'
+              - '!**/README.md'
+              - '!**/NOTES.md'
 
       # The global scenarios themselves
       - uses: dorny/paths-filter@v4
