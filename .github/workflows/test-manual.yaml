@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       features:
-        description: "Feature to execute the tests against (claude, claude-plugin-devcontainer, node)"
+        description: "Feature to execute the tests against (claude, claude-code, claude-plugin-devcontainer, node)"
         required: true
         default: "node"
       baseImage:
