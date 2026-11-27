@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# This test file will be executed against the 'alpine' scenario of scenarios.json: the 'node' feature
-# on the Alpine Dev Containers base image (non-root user 'vscode', bash and curl already there).
+# This test file will be executed against the 'alpine_3_23' scenario of scenarios.json: the 'node' feature
+# on the Alpine 3.23 Dev Containers base image (non-root user 'vscode', bash and curl already there).
 # It checks what is specific to Alpine; the generic checks are in test.sh.
 
 set -e
@@ -11,7 +11,7 @@ source dev-container-features-test-lib
 
 # Feature-specific tests
 # The 'check' command comes from the dev-container-features-test-lib.
-check "alpine" test -f /etc/alpine-release
+check "alpine 3.23" bash -c "grep -q ^3\.23 /etc/alpine-release"
 
 # Node.js must be the musl build: the glibc build from nodejs.org can't run on Alpine
 check "node is a musl build" bash -c "[ -z \"\$(node -p 'process.report.getReport().header.glibcVersionRuntime || \"\"')\" ]"
