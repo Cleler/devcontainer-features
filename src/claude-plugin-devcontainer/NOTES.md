@@ -77,3 +77,10 @@ Each agent works in its own context, so a full pipeline starts 3 to 4 agents. To
 Claude usually runs *inside* the container, so it can't rebuild it: after a change, the container has to be rebuilt from
 the host (VS Code: *Dev Containers: Rebuild Container*, or `devcontainer up --workspace-folder . --remove-existing-container`).
 The workflows say so, never write secrets in `.devcontainer/` and never run git operations.
+
+## Changelog
+
+| Version | Notes |
+| ------- | ----- |
+| 1.0.1 | No functional change (the keys of `devcontainer-feature.json` are ordered like the generator's) |
+| 1.0.0 | Initial version |

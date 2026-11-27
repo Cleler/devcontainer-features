@@ -26,7 +26,7 @@ Claude Code CLI and VS Code extension inside a devcontainer, with a config share
 
 # Using Claude Code in devcontainers
 
-## Prerequisite
+## Requirements
 
 The host directory must exist before the container is created (Docker refuses to bind-mount a missing path,
 and a Feature cannot create it for you):
@@ -40,22 +40,22 @@ directory, so every other devcontainer is already authenticated.
 
 ## How it works
 
-- Claude Code itself comes from the [`claude-code`](../claude-code) feature of this repository (declared in `dependsOn`),
-  and the `anthropic.claude-code` VS Code extension is installed. It is a copy of the official
-  [`claude-code`](https://github.com/anthropics/devcontainer-features/tree/main/src/claude-code) feature that depends on
-  the [`node`](../node) feature of this repository: Node.js and npm are installed first, on Debian, Ubuntu and Alpine
-  (the official `node` feature doesn't support Alpine, and the official `claude-code` can't be ordered after another `node`).
+- Claude Code itself comes from the [`claude-code`](../claude-code) feature (declared in `dependsOn`), which installs
+  Node.js first with the [`node`](../node) feature. The `anthropic.claude-code` VS Code extension is installed too.
   To choose the Node.js version, declare the `node` feature yourself in your `devcontainer.json`
   (`ghcr.io/Cleler/devcontainer-features/node:1`).
-- Use a Dev Containers base image (`mcr.microsoft.com/devcontainers/base:ubuntu`, `:debian` or `:alpine`, or a language image).
-  On a bare `debian` or `ubuntu` image, Node.js installed by the `node` feature fails to start for lack of `libatomic1`:
-  install it in your image first.
 - The host directory `~/.claude/devcontainer` is bind-mounted on `/home/vscode/.claude` and used as
   `CLAUDE_CONFIG_DIR`. It is shared by every devcontainer using this feature, so settings, history and
   authentication persist from one container to another. It is independent from the host's own `~/.claude`.
   Put your own settings, `CLAUDE.md`, skills, agents and commands there.
 - The project's own `.claude/` stays independent for each project, handled natively by Claude Code.
 - The auto-updater is disabled (`DISABLE_AUTOUPDATER=1`): the version is the one of the image.
+
+## Supported distributions
+
+Use a Dev Containers base image (`mcr.microsoft.com/devcontainers/base:ubuntu`, `:debian` or `:alpine`, or a language
+image). On a bare `debian` or `ubuntu` image, Node.js installed by the `node` feature fails to start for lack of
+`libatomic1`: install it in your image first.
 
 ## Managed settings and CLAUDE.md
 
@@ -68,6 +68,13 @@ Each file can be turned off with the options `managed-settings-json` and `manage
 
 For ready-made skills and agents aimed at devcontainers, see the
 [`claude-plugin-devcontainer`](../claude-plugin-devcontainer) feature.
+
+## Changelog
+
+| Version | Notes |
+| ------- | ----- |
+| 1.0.1 | Depends on this repository's `claude-code` (and so its `node`) instead of the official ones |
+| 1.0.0 | Initial version |
 
 
 ---

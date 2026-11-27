@@ -70,7 +70,7 @@ jobs:
             # The tag of the previous version: the latest one of the feature (this version has none yet)
             previous="$(git tag -l "feature_${id}_*" | sort -V | tail -n 1)"
             docs=false
-            if [ -n "${previous}" ] && ! git diff --quiet "${previous}" HEAD -- "src/${id}/README.md"; then
+            if [ -n "${previous}" ] && .github/scripts/maintenance/docs-changed.sh "${id}" "${previous}"; then
               docs=true
             fi
             message="$(.github/scripts/maintenance/tag-message.sh "${id}" "${version}" "${previous}" "${docs}")"

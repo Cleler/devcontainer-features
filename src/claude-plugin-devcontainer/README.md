@@ -97,6 +97,13 @@ Claude usually runs *inside* the container, so it can't rebuild it: after a chan
 the host (VS Code: *Dev Containers: Rebuild Container*, or `devcontainer up --workspace-folder . --remove-existing-container`).
 The workflows say so, never write secrets in `.devcontainer/` and never run git operations.
 
+## Changelog
+
+| Version | Notes |
+| ------- | ----- |
+| 1.0.1 | No functional change (the keys of `devcontainer-feature.json` are ordered like the generator's) |
+| 1.0.0 | Initial version |
+
 
 ---
 
