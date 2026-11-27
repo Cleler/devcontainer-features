@@ -72,3 +72,5 @@ For ready-made skills and agents aimed at devcontainers, see the
 ---
 
 _Note: This file was auto-generated from the [devcontainer-feature.json](https://github.com/Cleler/devcontainer-features/blob/main/src/claude/devcontainer-feature.json).  Add additional notes to a `NOTES.md`._
+
+<!-- test -->
