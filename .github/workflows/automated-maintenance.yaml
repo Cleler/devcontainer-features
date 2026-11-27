@@ -1,0 +1,160 @@
+name: "Automated Maintenance"
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+# One run at a time: the detection is stateless (git tags, README regenerated), so a run can't miss what the previous one did.
+concurrency:
+  group: automated-maintenance
+  cancel-in-progress: false
+
+# After each push on main:
+#  - check-code / update-version: the features whose code changed since their last release get their patch version incremented;
+#  - check-docs / generate-docs: the READMEs that are not what NOTES.md + devcontainer-feature.json generate are regenerated;
+#  - create-pr: one PR (automated-maintenance-<date>) with both, merged automatically once its checks pass.
+#    The 'release' check of that PR (release-pr.yaml) publishes the new versions (tags and release).
+#  - release: the features with a version that has no tag yet (a new feature, a version incremented by hand) are published directly.
+jobs:
+  check-code:
+    runs-on: ubuntu-latest
+    outputs:
+      plan: ${{ steps.plan.outputs.plan }}
+      has-bump: ${{ steps.plan.outputs.has-bump }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: "Plan the versions"
+        id: plan
+        run: |
+          plan="$(.github/scripts/maintenance/plan.sh | jq -sc .)"
+          echo "${plan}" | jq .
+          echo "plan=${plan}" >> "${GITHUB_OUTPUT}"
+          echo "has-bump=$(jq -r 'any(.[]; .action == "bump")' <<< "${plan}")" >> "${GITHUB_OUTPUT}"
+
+  update-version:
+    needs: [check-code]
+    if: needs.check-code.outputs.has-bump == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: "Increment the versions"
+        run: |
+          .github/scripts/maintenance/plan.sh | .github/scripts/maintenance/bump.sh
+          git diff > versions.patch
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: patch-versions
+          path: versions.patch
+
+  check-docs:
+    runs-on: ubuntu-latest
+    outputs:
+      features: ${{ steps.check.outputs.features }}
+      has-docs: ${{ steps.check.outputs.has-docs }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: "Generate the documentation"
+        uses: devcontainers/action@v1
+        with:
+          generate-docs: "true"
+          base-path-to-features: "./src"
+
+      - name: "READMEs that are out of date"
+        id: check
+        run: |
+          features="$(git status --porcelain -- 'src/*/README.md' | awk '{print $2}' | xargs -r -n1 dirname | xargs -r -n1 basename | jq -R . | jq -sc .)"
+          echo "${features}" | jq .
+          echo "features=${features}" >> "${GITHUB_OUTPUT}"
+          echo "has-docs=$(jq -r 'length > 0' <<< "${features}")" >> "${GITHUB_OUTPUT}"
+
+  generate-docs:
+    needs: [check-docs]
+    if: needs.check-docs.outputs.has-docs == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: "Generate the documentation"
+        uses: devcontainers/action@v1
+        with:
+          generate-docs: "true"
+          base-path-to-features: "./src"
+
+      - run: git diff > docs.patch
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: patch-docs
+          path: docs.patch
+
+  create-pr:
+    needs: [check-code, update-version, check-docs, generate-docs]
+    # At least one of the two produced something, and none failed
+    if: >-
+      always() && !failure() && !cancelled() &&
+      (needs.update-version.result == 'success' || needs.generate-docs.result == 'success')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # A token that triggers the workflows on the PR (checks, release): a GITHUB_TOKEN wouldn't
+          token: ${{ secrets.BOT_TOKEN || secrets.GITHUB_TOKEN }}
+
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: patch-*
+          merge-multiple: true
+          path: patches
+
+      - name: "Create the PR"
+        env:
+          GH_TOKEN: ${{ secrets.BOT_TOKEN || secrets.GITHUB_TOKEN }}
+          PLAN: ${{ needs.check-code.outputs.plan }}
+          DOCS: ${{ needs.check-docs.outputs.features }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          branch="automated-maintenance-$(date -u +%Y-%m-%dT%H-%M-%SZ)"
+          git checkout -b "${branch}"
+          for patch in patches/*.patch; do git apply "${patch}"; done
+          git add src
+          git commit -m "Automated maintenance"
+          git push origin "${branch}"
+
+          # The description: a fixed text with holes
+          versions="$(jq -r '.[] | select(.action == "bump") | "- `\(.id)`: \(.version) -> \(.new_version)"' <<< "${PLAN}")"
+          docs="$(jq -r '.[] | "- `\(.)`"' <<< "${DOCS}")"
+          python3 - "${GITHUB_SHA}" "${versions:-"- none"}" "${docs:-"- none"}" > body.md <<'PY'
+          import sys
+          text = open(".github/maintenance/pr-description.md").read()
+          for key, value in zip(("{{COMMIT}}", "{{VERSIONS}}", "{{DOCS}}"), (sys.argv[1][:7], sys.argv[2], sys.argv[3])):
+              text = text.replace(key, value)
+          print(text)
+          PY
+
+          url="$(gh pr create --base main --head "${branch}" --title "${branch}" --body-file body.md)"
+          echo "${url}"
+          # Merged by GitHub once the required checks pass
+          gh pr merge "${url}" --auto --merge
+
+  # New features, and versions incremented by hand: nothing to change in a PR, they are published directly
+  release:
+    needs: [check-code]
+    permissions:
+      contents: write
+      packages: write
+    uses: ./.github/workflows/_publish.yaml

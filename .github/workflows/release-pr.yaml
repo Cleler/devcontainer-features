@@ -1,0 +1,14 @@
+name: "PR - Release"
+on:
+  pull_request:
+
+# On the PRs of the 'Automated Maintenance' workflow, publishes the features whose version has been incremented.
+# On the other PRs nothing is published, but the 'release / check' check exists anyway.
+jobs:
+  release:
+    permissions:
+      contents: write
+      packages: write
+    uses: ./.github/workflows/_publish.yaml
+    with:
+      enabled: ${{ startsWith(github.head_ref, 'automated-maintenance-') }}
