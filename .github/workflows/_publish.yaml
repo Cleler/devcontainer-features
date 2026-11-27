@@ -67,6 +67,11 @@ jobs:
           while read -r feature; do
             id="$(jq -r .id <<< "${feature}")"
             version="$(jq -r .new_version <<< "${feature}")"
+            # Already tagged (published by another run in the meantime): nothing to do
+            if git rev-parse -q --verify "refs/tags/feature_${id}_${version}" > /dev/null; then
+              echo "feature_${id}_${version} already exists"
+              continue
+            fi
             # The tag of the previous version: the latest one of the feature (this version has none yet)
             previous="$(git tag -l "feature_${id}_*" | sort -V | tail -n 1)"
             docs=false
@@ -78,7 +83,9 @@ jobs:
             tags+=("refs/tags/feature_${id}_${version}")
           done < <(jq -c '.[]' <<< "${FEATURES}")
 
-          git push origin "${tags[@]}"
+          if [ "${#tags[@]}" -gt 0 ]; then
+            git push origin "${tags[@]}"
+          fi
 
   # Fixed name ('release / check' once called), to require in a ruleset
   check:

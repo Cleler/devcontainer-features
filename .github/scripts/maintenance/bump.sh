@@ -2,7 +2,8 @@
 # Applies a plan (output of plan.sh, on stdin):
 #   - "bump": writes the new version in src/<id>/devcontainer-feature.json (leaving the rest of the file untouched)
 #     and adds its line at the top of the Changelog table of src/<id>/NOTES.md (changelog.py);
-#   - "release" with "changelog": the version was incremented by hand, only the line of the Changelog table is added.
+#   - "release" or "changelog" with "changelog": true: only the line of the Changelog table is added (a version
+#     incremented by hand, or whose line was never written).
 #
 # usage: plan.sh | bump.sh [src-dir]
 set -euo pipefail
@@ -23,7 +24,7 @@ while read -r line; do
         [ "$(jq -r .version "${json}")" = "${new_version}" ] || { echo "Failed to bump ${id}" >&2; exit 1; }
         "${here}/changelog.py" "${id}" "${new_version}" "${base_tag}"
         echo "${id}: ${version} -> ${new_version}"
-    elif [ "${action}" = "release" ] && [ "$(jq -r .changelog <<< "${line}")" = "true" ]; then
+    elif [ "$(jq -r .changelog <<< "${line}")" = "true" ]; then
         "${here}/changelog.py" "${id}" "${new_version}" "${base_tag}"
         echo "${id}: changelog line for ${new_version}"
     fi

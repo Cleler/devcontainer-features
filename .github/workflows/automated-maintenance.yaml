@@ -116,7 +116,8 @@ jobs:
           path: changes.patch
 
   create-pr:
-    needs: [check-code, check-docs, generate-docs]
+    # After the direct publication ('release'): the checks of the PR plan the release again, they must find its tags
+    needs: [check-code, check-docs, generate-docs, release]
     # There is something to propose, and nothing failed
     if: always() && !failure() && !cancelled() && needs.generate-docs.result == 'success'
     runs-on: ubuntu-latest
