@@ -1,7 +1,7 @@
 {
     "name": "Claude Code",
     "id": "claude",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Claude Code CLI and VS Code extension inside a devcontainer, with a config shared between all devcontainers and independent from the host's own Claude Code",
     "documentationURL": "https://github.com/Cleler/devcontainer-features/tree/main/src/claude",
     "licenseURL": "https://github.com/Cleler/devcontainer-features/blob/main/LICENSE",

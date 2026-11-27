@@ -1,7 +1,7 @@
 {
     "name": "Claude Code plugin for devcontainers",
     "id": "claude-plugin-devcontainer",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "A Claude Code plugin ('devcontainer') with the skills and agents for working in a devcontainer",
     "documentationURL": "https://github.com/Cleler/devcontainer-features/tree/main/src/claude-plugin-devcontainer",
     "licenseURL": "https://github.com/Cleler/devcontainer-features/blob/main/LICENSE",
