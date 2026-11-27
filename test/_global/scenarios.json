@@ -12,5 +12,12 @@
             "claude": {},
             "claude-plugin-devcontainer": {}
         }
+    },
+    "claude_and_docker_alpine": {
+        "image": "mcr.microsoft.com/devcontainers/base:alpine",
+        "features": {
+            "claude": {},
+            "docker-outside-of-docker": {}
+        }
     }
 }

@@ -1,0 +1,17 @@
+{
+    "alpine": {
+        "image": "mcr.microsoft.com/devcontainers/base:alpine",
+        "features": {
+            "docker-outside-of-docker": {}
+        }
+    },
+    "alpine_no_compose": {
+        "image": "mcr.microsoft.com/devcontainers/base:alpine",
+        "features": {
+            "docker-outside-of-docker": {
+                "dockerDashComposeVersion": "none",
+                "installDockerBuildx": false
+            }
+        }
+    }
+}

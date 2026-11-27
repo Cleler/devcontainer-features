@@ -42,6 +42,12 @@ A Claude Code plugin (`devcontainer`) with the skills and agents for working in 
 
 [📖 Documentation](./src/claude-plugin-devcontainer/README.md)
 
+### docker-outside-of-docker
+
+The Docker CLI, using the host's Docker socket.
+
+[📖 Documentation](./src/docker-outside-of-docker/README.md)
+
 ### node
 
 Node.js (via nvm), yarn and pnpm.
@@ -70,6 +76,7 @@ Each feature documents its options and its requirements in its own README.
 | [claude](./src/claude) | Claude Code CLI + VS Code extension, configuration shared between all devcontainers | `claude-code` | [README](./src/claude/README.md) |
 | [claude-code](./src/claude-code) | Claude Code CLI | `node` | [README](./src/claude-code/README.md) |
 | [claude-plugin-devcontainer](./src/claude-plugin-devcontainer) | Claude Code plugin with skills and agents for working in a devcontainer | `claude` | [README](./src/claude-plugin-devcontainer/README.md) |
+| [docker-outside-of-docker](./src/docker-outside-of-docker) | Docker CLI (Buildx, Compose) using the host's Docker socket | — | [README](./src/docker-outside-of-docker/README.md) |
 | [node](./src/node) | Node.js via nvm, yarn, pnpm | — | [README](./src/node/README.md) |
 
 ## Dependency Graph
@@ -79,6 +86,7 @@ An arrow means "depends on": the feature at the end of the arrow is installed al
 ```mermaid
 flowchart BT
     node["node"]
+    docker["docker-outside-of-docker"]
     claude-code["claude-code"] --> node
     claude["claude"] --> claude-code
     claude-plugin-devcontainer["claude-plugin-devcontainer"] --> claude
