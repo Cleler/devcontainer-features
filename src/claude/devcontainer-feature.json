@@ -3,6 +3,8 @@
     "id": "claude",
     "version": "1.0.0",
     "description": "Claude Code CLI and VS Code extension inside a devcontainer, with a config shared between all devcontainers and independent from the host's own Claude Code",
+    "documentationURL": "https://github.com/Cleler/devcontainer-features/tree/main/src/claude",
+    "licenseURL": "https://github.com/Cleler/devcontainer-features/blob/main/LICENSE",
     "options": {
         "managed-claude-md": {
             "type": "boolean",
@@ -15,11 +17,8 @@
             "description": "Deploy the feature's settings.json at Claude Code's managed level (/etc/claude-code/managed-settings.json)."
         }
     },
-    "documentationURL": "https://github.com/Cleler/devcontainer-features/tree/main/src/claude",
-    "licenseURL": "https://github.com/Cleler/devcontainer-features/blob/main/LICENSE",
     "dependsOn": {
-        "ghcr.io/devcontainers/features/node:1": {},
-        "ghcr.io/anthropics/devcontainer-features/claude-code:1.0": {}
+        "ghcr.io/Cleler/devcontainer-features/claude-code:1": {}
     },
     "mounts": [
         {
