@@ -61,7 +61,7 @@ Publishing is automatic, handled by the [Automated Maintenance](.github/workflow
 
 - the patch version of each feature whose code changed since its last release is incremented (changes of `README.md` and `NOTES.md` don't count; for a bigger change, increment the version yourself in `devcontainer-feature.json`);
 - the READMEs that are not what `NOTES.md` and `devcontainer-feature.json` generate are regenerated;
-- both go in one pull request (`automated-maintenance-<date>`), merged automatically once its checks pass. Its `release / check` publishes the new versions to GHCR, with an annotated tag per feature (`feature_<id>_<version>`, whose message says what changed) and a GitHub release gathering them;
+- both go in one pull request (`automated-maintenance-<date>`), merged automatically once its checks pass. Its `release / check` publishes the new versions to GHCR, with an annotated tag per feature (`feature_<id>_<version>`, whose message says what changed, as in the official features);
 - a feature whose version has no tag yet (a new feature, a version you incremented yourself) is published directly.
 
 It needs a GitHub App (secrets `APP_ID` and `APP_PRIVATE_KEY`, with the *Contents* and *Pull requests* write permissions, installed on this repository: a `GITHUB_TOKEN` can't be used, what it does triggers no workflow) and *Allow auto-merge* in the repository settings. To publish by hand:

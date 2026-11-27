@@ -1,10 +1,10 @@
 #!/bin/bash
-# Prints the message of the tag of a feature:
+# Prints the message of the tag of a feature, as the official features do: a title, then the list of the changes.
 #
-#   feature_node_1.0.2
-#   Version change: 1.0.1 -> 1.0.2
-#   Changes:
-#   - <subjects of the commits touching src/node since the previous tag>
+#   Release node 1.0.2 (1.0.1 -> 1.0.2)
+#
+#   * <subjects of the commits touching src/node since the previous tag>
+#
 #   Documentation: updated
 #
 # usage: tag-message.sh <id> <version> <previous-tag|""> [docs-changed: true|false]
@@ -17,14 +17,14 @@ version="$2"
 previous_tag="${3:-}"
 docs_changed="${4:-false}"
 
-echo "feature_${id}_${version}"
 if [ -n "${previous_tag}" ]; then
-    echo "Version change: ${previous_tag#feature_"${id}"_} -> ${version}"
+    echo "Release ${id} ${version} (${previous_tag#feature_"${id}"_} -> ${version})"
 else
-    echo "First version: ${version}"
+    echo "Release ${id} ${version} (first version)"
 fi
-echo "Changes:"
-"${here}/changes.sh" "${id}" "${previous_tag}" | sed 's/^/- /'
+echo
+"${here}/changes.sh" "${id}" "${previous_tag}" | sed 's/^/* /'
 if [ "${docs_changed}" = "true" ]; then
+    echo
     echo "Documentation: updated"
 fi
