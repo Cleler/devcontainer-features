@@ -100,6 +100,10 @@ Exclude a bundled **VS Code extension** by prefixing its ID with `-`, or (when s
 }
 ```
 
+## Source
+
+This feature is taken from [devcontainers/features](https://github.com/devcontainers/features/tree/main/src/node), with the Alpine (apk) support added on top of it.
+
 
 ---
 

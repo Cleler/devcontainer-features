@@ -27,8 +27,8 @@ Installs the Claude Code CLI globally, after the node feature of this repository
 
 This feature is a copy of the official
 [`claude-code`](https://github.com/anthropics/devcontainer-features/tree/main/src/claude-code) feature
-with one change: it depends on the [`node`](../node) feature of this repository (`dependsOn`) instead of
-ordering itself after the official one (`installsAfter`).
+with two changes: it depends on the [`node`](../node) feature of this repository (`dependsOn`) instead of
+ordering itself after the official one (`installsAfter`), and it no longer installs Node.js itself.
 
 Why: the official feature only runs after the official `node` feature, which doesn't support Alpine.
 With a different `node` feature, nothing orders the installation, and `claude-code` can run before Node.js
@@ -48,8 +48,13 @@ your `devcontainer.json`:
 }
 ```
 
-The Node.js installation script of the official feature is still in `install.sh`, but it only runs
-if `node` or `npm` is missing, which doesn't happen with the dependency above.
+The Node.js installation code of the official feature (apt, apk, dnf and yum) has been removed from `install.sh`: it is
+not needed any more, as `node` handles Debian, Ubuntu, RHEL-family distributions and Alpine. The script only checks
+that `node` and `npm` are there, then installs `@anthropic-ai/claude-code` with npm.
+
+## Source
+
+This feature is taken from [anthropics/devcontainer-features](https://github.com/anthropics/devcontainer-features/tree/main/src/claude-code).
 
 
 ---
