@@ -2,15 +2,14 @@ name: "Test - Global scenarios"
 on:
   workflow_call:
     inputs:
-      enabled:
-        description: "false: the tests are skipped (the check job still succeeds)"
-        type: boolean
-        default: true
+      features:
+        description: "JSON array of the changed features: only the scenarios using at least one of them are run. 'all': every scenario."
+        type: string
+        default: all
 
 jobs:
-  # One entry per scenario of test/_global/scenarios.json
+  # One entry per scenario of test/_global/scenarios.json that uses one of the features
   list:
-    if: inputs.enabled
     runs-on: ubuntu-latest
     outputs:
       scenarios: ${{ steps.list.outputs.scenarios }}
@@ -19,15 +18,23 @@ jobs:
 
       - name: "List the global scenarios"
         id: list
+        env:
+          FEATURES: ${{ inputs.features }}
         run: |
           python3 - <<'PY' >> "$GITHUB_OUTPUT"
-          import json
-          print("scenarios=" + json.dumps(list(json.load(open("test/_global/scenarios.json")))))
+          import json, os
+          wanted = os.environ["FEATURES"]
+          scenarios = json.load(open("test/_global/scenarios.json"))
+          if wanted != "all":
+              features = set(json.loads(wanted))
+              # the keys of "features" are the ids of the local features (or registry references)
+              scenarios = {name: s for name, s in scenarios.items() if features & set(s["features"])}
+          print("scenarios=" + json.dumps(list(scenarios)))
           PY
 
   test:
     needs: [list]
-    if: inputs.enabled
+    if: needs.list.outputs.scenarios != '[]'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -51,9 +58,8 @@ jobs:
     if: always()
     runs-on: ubuntu-latest
     steps:
-      - name: "All the global scenarios passed (or they were skipped: nothing to test)"
+      - name: "All the global scenarios passed (or there was none to run)"
         env:
-          ENABLED: ${{ inputs.enabled }}
           LIST: ${{ needs.list.result }}
           TEST: ${{ needs.test.result }}
-        run: '[ "${ENABLED}" != true ] || { [ "${LIST}" = success ] && [ "${TEST}" = success ]; }'
+        run: '[ "${LIST}" = success ] && { [ "${TEST}" = success ] || [ "${TEST}" = skipped ]; }'
