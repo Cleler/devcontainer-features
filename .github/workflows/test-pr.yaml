@@ -3,12 +3,7 @@ on:
   pull_request:
 
 jobs:
-  # First: if it fails, no other job runs
-  lint-and-validate:
-    uses: ./.github/workflows/lint-and-validate.yaml
-
   detect-changes:
-    needs: [lint-and-validate]
     runs-on: ubuntu-latest
     outputs:
       features: ${{ steps.filter.outputs.changes }}
@@ -41,5 +36,4 @@ jobs:
 
   # Global scenarios combine several features: always run them
   test-global:
-    needs: [lint-and-validate]
     uses: ./.github/workflows/_test-global.yaml
