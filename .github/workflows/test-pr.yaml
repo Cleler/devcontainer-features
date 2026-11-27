@@ -42,10 +42,10 @@ jobs:
     with:
       features: ${{ needs.detect-changes.outputs.features }}
 
-  # Global scenarios combine several features: they run when a feature or a global scenario changed
-  # (the called workflow is always there, for its 'check' job, and skips its tests otherwise)
+  # Global scenarios combine several features: only the ones using a changed feature run (all of them if a global
+  # scenario itself changed). The called workflow is always there, for its 'check' job.
   test-global:
     needs: [detect-changes]
     uses: ./.github/workflows/_test-global.yaml
     with:
-      enabled: ${{ needs.detect-changes.outputs.features != '[]' || needs.detect-changes.outputs.global == 'true' }}
+      features: ${{ needs.detect-changes.outputs.global == 'true' && 'all' || needs.detect-changes.outputs.features }}
