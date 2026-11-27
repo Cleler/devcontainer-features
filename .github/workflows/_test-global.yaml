@@ -1,10 +1,16 @@
 name: "Test - Global scenarios"
 on:
   workflow_call:
+    inputs:
+      enabled:
+        description: "false: the tests are skipped (the check job still succeeds)"
+        type: boolean
+        default: true
 
 jobs:
   # One entry per scenario of test/_global/scenarios.json
   list:
+    if: inputs.enabled
     runs-on: ubuntu-latest
     outputs:
       scenarios: ${{ steps.list.outputs.scenarios }}
@@ -21,6 +27,7 @@ jobs:
 
   test:
     needs: [list]
+    if: inputs.enabled
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -44,8 +51,9 @@ jobs:
     if: always()
     runs-on: ubuntu-latest
     steps:
-      - name: "All the global scenarios passed"
+      - name: "All the global scenarios passed (or they were skipped: nothing to test)"
         env:
+          ENABLED: ${{ inputs.enabled }}
           LIST: ${{ needs.list.result }}
           TEST: ${{ needs.test.result }}
-        run: '[ "$LIST" = success ] && [ "$TEST" = success ]'
+        run: '[ "${ENABLED}" != true ] || { [ "${LIST}" = success ] && [ "${TEST}" = success ]; }'
