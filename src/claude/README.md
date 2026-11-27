@@ -73,6 +73,7 @@ For ready-made skills and agents aimed at devcontainers, see the
 
 | Version | Notes |
 | ------- | ----- |
+| 1.1.0 | Add docker-outside-of-docker, and bump the other features to 1.1.0 |
 | 1.0.1 | Depends on this repository's `claude-code` (and so its `node`) instead of the official ones |
 | 1.0.0 | Initial version |
 

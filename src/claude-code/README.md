@@ -55,6 +55,7 @@ fails on recent Ubuntu). Here `node` is always installed first.
 
 | Version | Notes |
 | ------- | ----- |
+| 1.1.0 | Add docker-outside-of-docker, and bump the other features to 1.1.0 |
 | 1.0.0 | Initial version |
 
 ## Source
