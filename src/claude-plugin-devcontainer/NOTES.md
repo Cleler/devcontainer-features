@@ -82,5 +82,6 @@ The workflows say so, never write secrets in `.devcontainer/` and never run git 
 
 | Version | Notes |
 | ------- | ----- |
+| 1.1.0 | Add docker-outside-of-docker, and bump the other features to 1.1.0 |
 | 1.0.1 | No functional change (the keys of `devcontainer-feature.json` are ordered like the generator's) |
 | 1.0.0 | Initial version |

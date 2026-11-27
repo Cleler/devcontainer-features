@@ -73,6 +73,7 @@ Exclude a bundled **VS Code extension** by prefixing its ID with `-`, or (when s
 
 | Version | Notes |
 | ------- | ----- |
+| 1.1.0 | Add docker-outside-of-docker, and bump the other features to 1.1.0 |
 | 1.0.0 | Initial version: the official `node` feature, with Alpine (apk) support |
 
 ## Source
