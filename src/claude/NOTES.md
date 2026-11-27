@@ -41,3 +41,5 @@ Each file can be turned off with the options `managed-settings-json` and `manage
 
 For ready-made skills and agents aimed at devcontainers, see the
 [`claude-plugin-devcontainer`](../claude-plugin-devcontainer) feature.
+
+<!-- test -->
