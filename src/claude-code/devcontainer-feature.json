@@ -1,0 +1,19 @@
+{
+    "name": "Claude Code CLI",
+    "id": "claude-code",
+    "version": "1.0.0",
+    "description": "Installs the Claude Code CLI globally, after the node feature of this repository (works on Alpine too)",
+    "documentationURL": "https://github.com/Cleler/devcontainer-features/tree/main/src/claude-code",
+    "licenseURL": "https://github.com/Cleler/devcontainer-features/blob/main/LICENSE",
+    "options": {},
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "anthropic.claude-code"
+            ]
+        }
+    },
+    "dependsOn": {
+        "ghcr.io/Cleler/devcontainer-features/node:1": {}
+    }
+}
