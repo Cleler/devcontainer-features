@@ -65,8 +65,10 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           sha="$(git rev-parse HEAD)"
           release="release_$(date -u +%Y-%m-%dT%H-%M-%SZ)"
-          notes=""
+          features_file="${RUNNER_TEMP}/features.jsonl"
+          : > "${features_file}"
           tags=()
+          ids=()
 
           while read -r feature; do
             id="$(jq -r .id <<< "${feature}")"
@@ -80,11 +82,19 @@ jobs:
             message="$(.github/scripts/maintenance/tag-message.sh "${id}" "${version}" "${previous}" "${docs}")"
             git tag -a "feature_${id}_${version}" -m "${message}"
             tags+=("refs/tags/feature_${id}_${version}")
-            notes+="${message}"$'\n\n'
+            ids+=("${id}")
+            # What the notes of the release are built from
+            changes="$(.github/scripts/maintenance/changes.sh "${id}" "${previous}" | jq -R . | jq -sc .)"
+            jq -cn --arg id "${id}" --arg version "${version}" --arg previous "${previous}" \
+              --arg tag "feature_${id}_${version}" --argjson changes "${changes}" --argjson docs "${docs}" \
+              '{id: $id, version: $version, previous_version: (if $previous == "" then null else ($previous | sub("^feature_.*_"; "")) end),
+                previous_tag: $previous, tag: $tag, changes: $changes, docs: $docs}' >> "${features_file}"
           done < <(jq -c '.[]' <<< "${FEATURES}")
 
           git push origin "${tags[@]}"
-          gh release create "${release}" --target "${sha}" --title "${release}" --notes "${notes}"
+          notes="$(.github/scripts/maintenance/release-notes.py "${release}" "${GITHUB_REPOSITORY}" "${features_file}")"
+          title="Release $(date -u '+%Y-%m-%d %H:%M UTC') · $(IFS=,; echo "${ids[*]}" | sed 's/,/, /g')"
+          gh release create "${release}" --target "${sha}" --title "${title}" --notes "${notes}"
 
   # Fixed name ('release / check' once called), to require in a ruleset
   check:
