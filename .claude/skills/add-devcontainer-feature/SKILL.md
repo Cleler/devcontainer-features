@@ -63,8 +63,20 @@ fi
 
 ### `NOTES.md` and `README.md`
 
-- Write the documentation in `NOTES.md` (usage, requirements, supported distributions, limits). Never edit `README.md`.
-- If the feature is adapted from another one, end `NOTES.md` with a `## Source` section linking the original folder.
+- Write the documentation in `NOTES.md`; never edit `README.md`. Skeleton, keep the sections that apply:
+  `## Requirements`, `## How it works`, `## Supported distributions`, `## Changelog`, then `## Source` for a feature
+  adapted from another one.
+- End with the changelog, a table whose newest line is first. The maintenance adds a line for each new version by
+  itself; write the first one:
+
+```markdown
+## Changelog
+
+| Version | Notes |
+| ------- | ----- |
+| 1.0.0 | Initial version |
+```
+- If the feature is adapted from another one, end `NOTES.md` with a `## Source` section (after the changelog) linking the original folder.
 - Generate the README, then restore the footer line the workflow writes (full GitHub URL instead of the relative link
   the local CLI writes):
 

@@ -62,9 +62,11 @@ devcontainer features test --global-scenarios-only .                            
 [Automated Maintenance](.github/workflows/automated-maintenance.yaml) workflow, after each push on `main`, compares each
 feature with the git tag of its current version (`feature_<id>_<version>`):
 
-- `src/<id>/` changed since that tag (`README.md` and `NOTES.md` excluded) → patch + 1 (`.github/scripts/maintenance/plan.sh`);
-- the README does not match what `NOTES.md` + `devcontainer-feature.json` generate → regenerated;
-- both go in **one PR** `automated-maintenance-<date>`, created by the GitHub App, merged automatically when its checks
+- `src/<id>/` changed since that tag (`README.md` and `NOTES.md` excluded) → patch + 1 (`.github/scripts/maintenance/plan.sh`),
+  and a line (the subjects of the commits) at the top of the **Changelog table of its `NOTES.md`** (`changelog.py`);
+- the README does not match what `NOTES.md` + `devcontainer-feature.json` generate → regenerated, after the previous step
+  (`generate-docs` comes after `update-version`), so the changelog line reaches the README;
+- all of it goes in **one PR** `automated-maintenance-<date>`, created by the GitHub App, merged automatically when its checks
   pass. Its `release / check` publishes the new versions (OCI packages on GHCR) and pushes one annotated tag per
   feature, whose message says what changed (`Release <id> <version> (<old> -> <new>)`, the commits, `Documentation: updated`);
 - a feature whose current version has **no tag** (a new feature, a version you incremented yourself) is published
@@ -123,6 +125,11 @@ The local CLI writes the last line (`auto-generated from the devcontainer-featur
 workflow writes it with the full GitHub URL: restore the URL form before committing, as the files in `main` have it.
 
 ## Conventions
+
+- **`NOTES.md`** is the hand-written part of the README. Skeleton, to keep the sections that apply: `Requirements`,
+  `How it works`, `Supported distributions`, `Changelog`, then `Source` for a feature adapted from another one. The
+  `Changelog` is a table (`| Version | Notes |`, newest first) that the maintenance fills for each new version; write
+  the first line (`1.0.0 | Initial version`) yourself, and the line of a minor/major version you bump yourself.
 
 - **`devcontainer-feature.json` must be plain JSON** (no `//` comments), keys in this order: `name`, `id`, `version`,
   `description`, `documentationURL`, `licenseURL`, `options`, then the rest (a feature adapted from another one keeps
