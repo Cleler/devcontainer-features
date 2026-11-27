@@ -23,12 +23,17 @@ jobs:
           - mcr.microsoft.com/devcontainers/base:debian
           - mcr.microsoft.com/devcontainers/base:noble
           - mcr.microsoft.com/devcontainers/base:alpine
+          - mcr.microsoft.com/devcontainers/base:alpine-3.22
         exclude:
           # 'claude' depends on the official node feature, which doesn't support Alpine
           - features: claude
             baseImage: mcr.microsoft.com/devcontainers/base:alpine
           - features: claude-plugin-devcontainer
             baseImage: mcr.microsoft.com/devcontainers/base:alpine
+          - features: claude
+            baseImage: mcr.microsoft.com/devcontainers/base:alpine-3.22
+          - features: claude-plugin-devcontainer
+            baseImage: mcr.microsoft.com/devcontainers/base:alpine-3.22
           # 'claude' relies on the Dev Containers base images (vscode user): skip the bare ones
           - features: claude
             baseImage: ubuntu:jammy
