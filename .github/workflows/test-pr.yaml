@@ -15,6 +15,7 @@ jobs:
         with:
           filters: |
             claude: ./**/claude/**
+            claude-code: ./**/claude-code/**
             claude-plugin-devcontainer: ./**/claude-plugin-devcontainer/**
             node: ./**/node/**
 

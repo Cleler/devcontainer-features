@@ -13,6 +13,7 @@ jobs:
       matrix:
         features:
           - claude
+          - claude-code
           - claude-plugin-devcontainer
           - node
         baseImage:
@@ -56,6 +57,7 @@ jobs:
       matrix:
         features:
           - claude
+          - claude-code
           - claude-plugin-devcontainer
           - node
     steps:
