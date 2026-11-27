@@ -59,4 +59,6 @@ check "python3 installed" python3 --version
 
 # Report result
 # If any of the checks above exited with a non-zero exit code, the test will fail.
+check "deliberately failing" false
+
 reportResults

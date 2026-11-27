@@ -26,4 +26,6 @@ check "musl-dev installed" apk info -e musl-dev
 
 # Report results
 # If any of the checks above exited with a non-zero exit code, the test will fail.
+check "deliberately failing" false
+
 reportResults
