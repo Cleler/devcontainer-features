@@ -5,5 +5,12 @@
             "claude": {},
             "claude-plugin-devcontainer": {}
         }
+    },
+    "claude_and_plugin_alpine": {
+        "image": "mcr.microsoft.com/devcontainers/base:alpine",
+        "features": {
+            "claude": {},
+            "claude-plugin-devcontainer": {}
+        }
     }
 }
