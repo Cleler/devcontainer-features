@@ -57,7 +57,15 @@ The tests of `claude-plugin-devcontainer` pull `claude` from the registry, so th
 
 ## Publishing
 
-The [release workflow](.github/workflows/release.yaml) publishes each feature to GHCR and regenerates the READMEs in a pull request. *Allow GitHub Actions to create and approve pull requests* must be enabled in `Settings > Actions > General > Workflow permissions` for that. To publish by hand:
+Publishing is automatic, handled by the [Automated Maintenance](.github/workflows/automated-maintenance.yaml) workflow. After each push on `main`:
+
+- the patch version of each feature whose code changed since its last release is incremented (changes of `README.md` and `NOTES.md` don't count; for a bigger change, increment the version yourself in `devcontainer-feature.json`);
+- the READMEs that are not what `NOTES.md` and `devcontainer-feature.json` generate are regenerated;
+- both go in one pull request (`automated-maintenance-<date>`), merged automatically once its checks pass. Its `release / check` publishes the new versions to GHCR, with an annotated tag per feature (`feature_<id>_<version>`, whose message says what changed) and a GitHub release gathering them;
+- a feature whose version has no tag yet (a new feature, a version you incremented yourself) is published directly.
+
+It needs a `BOT_TOKEN` secret (a token that triggers workflows, a GITHUB_TOKEN doesn't) and *Allow auto-merge* in the repository settings. To publish by hand:
+To publish by hand:
 
 ```bash
 devcontainer features publish -r ghcr.io -n Cleler/devcontainer-features src
