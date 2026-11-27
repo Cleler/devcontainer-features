@@ -1,0 +1,26 @@
+name: "Cleanup Maintenance Branches"
+on:
+  schedule:
+    - cron: '30 3 * * *'
+  workflow_dispatch:
+
+# Deletes the automated-maintenance-* branches that have no open PR any more (merged or closed)
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: read
+    steps:
+      - name: "Delete the branches"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          for branch in $(gh api "repos/${GITHUB_REPOSITORY}/branches" --paginate -q '.[].name' | grep '^automated-maintenance-' || true); do
+            open="$(gh pr list --repo "${GITHUB_REPOSITORY}" --head "${branch}" --state open --json number -q length)"
+            if [ "${open}" = 0 ]; then
+              echo "Deleting ${branch}"
+              gh api -X DELETE "repos/${GITHUB_REPOSITORY}/git/refs/heads/${branch}"
+            fi
+          done

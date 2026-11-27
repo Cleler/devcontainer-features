@@ -1,0 +1,99 @@
+name: "Publish - Tags and release"
+on:
+  workflow_call:
+    inputs:
+      enabled:
+        description: "false: nothing is published (the check job still succeeds)"
+        type: boolean
+        default: true
+
+# Publishes the features whose current version has no tag yet (plan.sh), creates their annotated tags (the message
+# says what changed) and one GitHub release whose notes are the messages of these tags.
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      features: ${{ steps.plan.outputs.features }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # The head of the PR, not the merge commit GitHub builds for it
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: "Features to publish"
+        id: plan
+        env:
+          ENABLED: ${{ inputs.enabled }}
+        run: |
+          features='[]'
+          if [ "${ENABLED}" = true ]; then
+            features="$(.github/scripts/maintenance/plan.sh | jq -sc '[.[] | select(.action == "release")]')"
+          fi
+          echo "features=${features}" >> "${GITHUB_OUTPUT}"
+
+  publish:
+    needs: [plan]
+    if: needs.plan.outputs.features != '[]'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: "Publish the features"
+        uses: devcontainers/action@v1
+        with:
+          publish-features: "true"
+          base-path-to-features: "./src"
+          # The tags are created below, with a message
+          disable-repo-tagging: "true"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: "Tags and release"
+        env:
+          FEATURES: ${{ needs.plan.outputs.features }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          sha="$(git rev-parse HEAD)"
+          release="release_$(date -u +%Y-%m-%dT%H-%M-%SZ)"
+          notes=""
+          tags=()
+
+          while read -r feature; do
+            id="$(jq -r .id <<< "${feature}")"
+            version="$(jq -r .new_version <<< "${feature}")"
+            # The tag of the previous version: the latest one of the feature (this version has none yet)
+            previous="$(git tag -l "feature_${id}_*" | sort -V | tail -n 1)"
+            docs=false
+            if [ -n "${previous}" ] && ! git diff --quiet "${previous}" HEAD -- "src/${id}/README.md"; then
+              docs=true
+            fi
+            message="$(.github/scripts/maintenance/tag-message.sh "${id}" "${version}" "${previous}" "${docs}")"
+            git tag -a "feature_${id}_${version}" -m "${message}"
+            tags+=("refs/tags/feature_${id}_${version}")
+            notes+="${message}"$'\n\n'
+          done < <(jq -c '.[]' <<< "${FEATURES}")
+
+          git push origin "${tags[@]}"
+          gh release create "${release}" --target "${sha}" --title "${release}" --notes "${notes}"
+
+  # Fixed name ('release / check' once called), to require in a ruleset
+  check:
+    needs: [plan, publish]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Everything to publish has been published (or there was nothing to publish)"
+        env:
+          PLAN: ${{ needs.plan.result }}
+          PUBLISH: ${{ needs.publish.result }}
+        run: '[ "${PLAN}" = success ] && { [ "${PUBLISH}" = success ] || [ "${PUBLISH}" = skipped ]; }'
