@@ -14,7 +14,7 @@ concurrency:
 #  - check-code / update-version: the features whose code changed since their last release get their patch version incremented;
 #  - check-docs / generate-docs: the READMEs that are not what NOTES.md + devcontainer-feature.json generate are regenerated;
 #  - create-pr: one PR (automated-maintenance-<date>) with both, merged automatically once its checks pass.
-#    The 'release' check of that PR (release-pr.yaml) publishes the new versions (tags and release).
+#    The 'release' check of that PR (release-pr.yaml) publishes the new versions (and tags them).
 #  - release: the features with a version that has no tag yet (a new feature, a version incremented by hand) are published directly.
 jobs:
   check-code:
