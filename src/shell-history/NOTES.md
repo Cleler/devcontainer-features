@@ -13,7 +13,7 @@ Codespaces too, unlike a bind-mount of a host folder).
   - **bash**: `HISTFILE=/mnt/shell-history/.bash_history`, `HISTSIZE` and `HISTFILESIZE` set to `maxHistorySize`, and
     `history -a` in `PROMPT_COMMAND` so that each command is written when it is run, not only when the shell exits;
   - **zsh** (when installed): `HISTFILE=/mnt/shell-history/.zsh_history`, `HISTSIZE`, `SAVEHIST` and `INC_APPEND_HISTORY`;
-  - **fish** (when installed): its history file is a link to the volume (fish has no setting for it).
+- Only bash and zsh are handled: they are the two shells of the official Dev Containers images.
 - The feature is installed after `common-utils`, so that zsh, if you ask it as the default shell, is there.
 
 ## Supported distributions

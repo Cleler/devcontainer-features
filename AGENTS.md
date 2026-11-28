@@ -24,7 +24,7 @@ test/_global/                  # scenarios that combine several features (scenar
 | ------- | ---------- | ----------- |
 | `docker-outside-of-docker` | — | Docker CLI (Buildx, Compose) using the host's Docker socket |
 | `node` | — | Node.js via nvm, yarn, pnpm |
-| `shell-history` | — | Shell history (bash, zsh, fish) kept across rebuilds, one per project (named volume `shell-history-${devcontainerId}`) |
+| `shell-history` | — | Shell history (bash, zsh) kept across rebuilds, one per project (named volume `shell-history-${devcontainerId}`) |
 | `claude-code` | `node` | Claude Code CLI |
 | `claude` | `claude-code` | Claude Code (CLI + VS Code extension), configuration shared between all devcontainers |
 | `claude-plugin-devcontainer` | `claude` | Claude Code plugin with skills and agents for working in a devcontainer |

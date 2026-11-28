@@ -1,7 +1,7 @@
 #!/bin/sh
 #
 # Run as the remote user when the container is created (postCreateCommand): makes the history volume writable and
-# points bash, zsh and fish at it. Safe to run again: the lines it writes are in a block that is replaced.
+# points bash and zsh at it. Safe to run again: the lines it writes are in a block that is replaced.
 
 set -e
 
@@ -51,16 +51,6 @@ if command -v zsh > /dev/null 2>&1 || [ -f "${HOME}/.zshrc" ]; then
 export HISTSIZE=${MAX_HISTORY_SIZE}
 export SAVEHIST=${MAX_HISTORY_SIZE}
 setopt INC_APPEND_HISTORY"
-fi
-
-# fish keeps its history in a fixed place: link it to the volume
-if command -v fish > /dev/null 2>&1; then
-    fish_dir="${XDG_DATA_HOME:-${HOME}/.local/share}/fish"
-    mkdir -p "${fish_dir}"
-    if [ -f "${fish_dir}/fish_history" ] && [ ! -L "${fish_dir}/fish_history" ]; then
-        mv "${fish_dir}/fish_history" "${fish_dir}/fish_history-old"
-    fi
-    ln -sf "${VOLUME}/fish_history" "${fish_dir}/fish_history"
 fi
 
 echo "Done!"
