@@ -38,6 +38,10 @@ jobs:
               - './**/node/**'
               - '!**/README.md'
               - '!**/NOTES.md'
+            shell-history:
+              - './**/shell-history/**'
+              - '!**/README.md'
+              - '!**/NOTES.md'
 
       # The global scenarios themselves
       - uses: dorny/paths-filter@v4
