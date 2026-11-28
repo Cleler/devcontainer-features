@@ -24,9 +24,11 @@ Codespaces too, unlike a bind-mount of a host folder).
 
 ## How it works
 
-- The volume is named `shell-history-${devcontainerId}` and mounted on `/mnt/shell-history`. `${devcontainerId}` is
-  computed from the folder of the project, so **each project has its own history**, kept across rebuilds (a rebuild
-  of the same project gets its volume back), and never mixed with the history of another project.
+- The volume is named `shell-history-<project folder>-<id>` and mounted on `/mnt/shell-history`: the name of the folder
+  of the project, so that you recognise it, and the `${devcontainerId}` of Dev Containers (computed from the path of the
+  folder, stable across rebuilds), so that two projects whose folders have the same name don't share a history.
+  **Each project has its own history**, kept across rebuilds (a rebuild of the same project gets its volume back).
+  List them with `docker volume ls --filter name=shell-history-`, remove one with `docker volume rm <name>`.
 - When the container is created, a script run as the remote user (`postCreateCommand`) hands the volume to that user and
   points the shells at it, with a block it writes in the shell's startup file (replaced if it runs again):
   - **bash**: `HISTFILE=/mnt/shell-history/.bash_history`, `HISTSIZE` and `HISTFILESIZE` set to `maxHistorySize` (`-1`, no limit, by default), and
@@ -43,7 +45,7 @@ that isn't root: the Dev Containers base images have it.
 ## Limits
 
 - By default **nothing is limited**: the history keeps growing. Set `maxHistorySize` (a number) to cap it.
-- Deleting the volume (`docker volume rm shell-history-…`) deletes the history of the project.
+- Removing the volume deletes the history of the project.
 - A history is the one of a **folder**: the same project cloned in two folders has two histories.
 
 ## Changelog

@@ -18,7 +18,7 @@
     },
     "mounts": [
         {
-            "source": "shell-history-${devcontainerId}",
+            "source": "shell-history-${localWorkspaceFolderBasename}-${devcontainerId}",
             "target": "/mnt/shell-history",
             "type": "volume"
         }

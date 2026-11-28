@@ -25,6 +25,7 @@ source dev-container-features-test-lib
 
 # The volume
 check "history volume is mounted" test -d /mnt/shell-history
+check "the volume is named after the project" bash -c "grep ' /mnt/shell-history ' /proc/self/mountinfo | grep -q '/volumes/shell-history-'"
 check "history volume is writable" bash -c "touch /mnt/shell-history/.write-test && rm /mnt/shell-history/.write-test"
 
 # bash
