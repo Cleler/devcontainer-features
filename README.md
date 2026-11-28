@@ -54,6 +54,12 @@ Node.js (via nvm), yarn and pnpm.
 
 [📖 Documentation](./src/node/README.md)
 
+### shell-history
+
+The history of bash, zsh and fish, kept across rebuilds, with one history per project.
+
+[📖 Documentation](./src/shell-history/README.md)
+
 ## Usage
 
 Reference the features you want in your `devcontainer.json`:
@@ -78,6 +84,7 @@ Each feature documents its options and its requirements in its own README.
 | [claude-plugin-devcontainer](./src/claude-plugin-devcontainer) | Claude Code plugin with skills and agents for working in a devcontainer | `claude` | [README](./src/claude-plugin-devcontainer/README.md) |
 | [docker-outside-of-docker](./src/docker-outside-of-docker) | Docker CLI (Buildx, Compose) using the host's Docker socket | — | [README](./src/docker-outside-of-docker/README.md) |
 | [node](./src/node) | Node.js via nvm, yarn, pnpm | — | [README](./src/node/README.md) |
+| [shell-history](./src/shell-history) | Shell history (bash, zsh, fish) kept across rebuilds, one per project | — | [README](./src/shell-history/README.md) |
 
 ## Dependency Graph
 
@@ -87,6 +94,7 @@ An arrow means "depends on": the feature at the end of the arrow is installed al
 flowchart BT
     node["node"]
     docker["docker-outside-of-docker"]
+    shell-history["shell-history"]
     claude-code["claude-code"] --> node
     claude["claude"] --> claude-code
     claude-plugin-devcontainer["claude-plugin-devcontainer"] --> claude
