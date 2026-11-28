@@ -1,12 +1,21 @@
 #!/bin/sh
 #
 # Run as the remote user when the container is created (postCreateCommand): makes the history volume writable and
-# points bash, zsh and fish at it. Safe to run again: the lines it writes are in a block that is replaced.
+# points bash and zsh at it. Safe to run again: the lines it writes are in a block that is replaced.
 
 set -e
 
 VOLUME="${SHELL_HISTORY_VOLUME:-/mnt/shell-history}"
-MAX_HISTORY_SIZE="$(cat /usr/local/share/shell-history/max-history-size 2> /dev/null || echo 10000)"
+MAX_HISTORY_SIZE="$(cat /usr/local/share/shell-history/max-history-size 2> /dev/null || echo unlimited)"
+
+# bash: a negative size means no limit. zsh has no such value: a very large one does the same.
+if [ "${MAX_HISTORY_SIZE}" = unlimited ]; then
+    BASH_SIZE=-1
+    ZSH_SIZE=1000000000
+else
+    BASH_SIZE="${MAX_HISTORY_SIZE}"
+    ZSH_SIZE="${MAX_HISTORY_SIZE}"
+fi
 BEGIN="# >>> shell-history >>>"
 END="# <<< shell-history <<<"
 
@@ -38,8 +47,8 @@ write_block() {
 }
 
 write_block "${HOME}/.bashrc" "export HISTFILE=${VOLUME}/.bash_history
-export HISTSIZE=${MAX_HISTORY_SIZE}
-export HISTFILESIZE=${MAX_HISTORY_SIZE}
+export HISTSIZE=${BASH_SIZE}
+export HISTFILESIZE=${BASH_SIZE}
 # Written after each command, not only when the shell exits
 case \"\${PROMPT_COMMAND}\" in
     *'history -a'*) ;;
@@ -48,19 +57,9 @@ esac"
 
 if command -v zsh > /dev/null 2>&1 || [ -f "${HOME}/.zshrc" ]; then
     write_block "${HOME}/.zshrc" "export HISTFILE=${VOLUME}/.zsh_history
-export HISTSIZE=${MAX_HISTORY_SIZE}
-export SAVEHIST=${MAX_HISTORY_SIZE}
+export HISTSIZE=${ZSH_SIZE}
+export SAVEHIST=${ZSH_SIZE}
 setopt INC_APPEND_HISTORY"
-fi
-
-# fish keeps its history in a fixed place: link it to the volume
-if command -v fish > /dev/null 2>&1; then
-    fish_dir="${XDG_DATA_HOME:-${HOME}/.local/share}/fish"
-    mkdir -p "${fish_dir}"
-    if [ -f "${fish_dir}/fish_history" ] && [ ! -L "${fish_dir}/fish_history" ]; then
-        mv "${fish_dir}/fish_history" "${fish_dir}/fish_history-old"
-    fi
-    ln -sf "${VOLUME}/fish_history" "${fish_dir}/fish_history"
 fi
 
 echo "Done!"

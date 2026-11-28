@@ -56,7 +56,7 @@ Node.js (via nvm), yarn and pnpm.
 
 ### shell-history
 
-The history of bash, zsh and fish, kept across rebuilds, with one history per project.
+The history of bash and zsh, kept across rebuilds, with one history per project.
 
 [📖 Documentation](./src/shell-history/README.md)
 
@@ -84,7 +84,7 @@ Each feature documents its options and its requirements in its own README.
 | [claude-plugin-devcontainer](./src/claude-plugin-devcontainer) | Claude Code plugin with skills and agents for working in a devcontainer | `claude` | [README](./src/claude-plugin-devcontainer/README.md) |
 | [docker-outside-of-docker](./src/docker-outside-of-docker) | Docker CLI (Buildx, Compose) using the host's Docker socket | — | [README](./src/docker-outside-of-docker/README.md) |
 | [node](./src/node) | Node.js via nvm, yarn, pnpm | — | [README](./src/node/README.md) |
-| [shell-history](./src/shell-history) | Shell history (bash, zsh, fish) kept across rebuilds, one per project | — | [README](./src/shell-history/README.md) |
+| [shell-history](./src/shell-history) | Shell history (bash, zsh) kept across rebuilds, one per project | — | [README](./src/shell-history/README.md) |
 
 ## Dependency Graph
 

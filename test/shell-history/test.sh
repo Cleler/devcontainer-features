@@ -25,11 +25,13 @@ source dev-container-features-test-lib
 
 # The volume
 check "history volume is mounted" test -d /mnt/shell-history
+check "the volume is named after the project" bash -c "grep ' /mnt/shell-history ' /proc/self/mountinfo | grep -q '/volumes/shell-history-'"
 check "history volume is writable" bash -c "touch /mnt/shell-history/.write-test && rm /mnt/shell-history/.write-test"
 
 # bash
 check "bash keeps its history in the volume" bash -ic 'case "$HISTFILE" in /mnt/shell-history/*) exit 0 ;; *) exit 1 ;; esac'
 check "bash history is written to the volume" bash -ic 'history -s shell_history_marker; history -a; grep -q shell_history_marker /mnt/shell-history/.bash_history'
+check "bash history has no limit by default" bash -ic '[ "$HISTSIZE" = -1 ] && [ "$HISTFILESIZE" = -1 ]'
 check "the bashrc block is there once" bash -c '[ "$(grep -c ">>> shell-history >>>" "$HOME/.bashrc")" = 1 ]'
 
 # Report result

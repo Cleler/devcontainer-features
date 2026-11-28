@@ -2,19 +2,23 @@
     "name": "Shell History",
     "id": "shell-history",
     "version": "1.0.0",
-    "description": "Keeps the history of bash, zsh and fish across the rebuilds of a devcontainer, with one history per project",
+    "description": "Keeps the history of bash and zsh across the rebuilds of a devcontainer, with one history per project",
     "documentationURL": "https://github.com/Cleler/devcontainer-features/tree/main/src/shell-history",
     "licenseURL": "https://github.com/Cleler/devcontainer-features/blob/main/LICENSE",
     "options": {
         "maxHistorySize": {
             "type": "string",
-            "default": "10000",
-            "description": "Number of history entries kept, in memory and in the history file (bash and zsh)."
+            "proposals": [
+                "unlimited",
+                "10000"
+            ],
+            "default": "unlimited",
+            "description": "Number of history entries kept, in memory and in the history file, or 'unlimited'."
         }
     },
     "mounts": [
         {
-            "source": "shell-history-${devcontainerId}",
+            "source": "shell-history-${localWorkspaceFolderBasename}-${devcontainerId}",
             "target": "/mnt/shell-history",
             "type": "volume"
         }
