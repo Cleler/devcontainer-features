@@ -33,4 +33,5 @@ that isn't root: the Dev Containers base images have it.
 
 | Version | Notes |
 | ------- | ----- |
+| 1.0.1 | shell-history: the volume is named after the project folder, then the devcontainerId<br>shell-history: no limit on the history by default<br>shell-history: bash and zsh only (the two shells of the official Dev Containers images) |
 | 1.0.0 | Initial version |
