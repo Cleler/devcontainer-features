@@ -1,7 +1,8 @@
 name: "Cleanup Maintenance Branches"
 on:
   schedule:
-    - cron: '30 3 * * *'
+    # TEMPORARY, to check that the schedule works (back to '30 3 * * *' right after)
+    - cron: '*/10 * * * *'
   workflow_dispatch:
 
 # Deletes the automated-maintenance-* branches that have no open PR any more (merged or closed)
