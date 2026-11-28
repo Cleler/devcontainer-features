@@ -8,8 +8,12 @@
     "options": {
         "maxHistorySize": {
             "type": "string",
-            "default": "10000",
-            "description": "Number of history entries kept, in memory and in the history file (bash and zsh)."
+            "proposals": [
+                "unlimited",
+                "10000"
+            ],
+            "default": "unlimited",
+            "description": "Number of history entries kept, in memory and in the history file, or 'unlimited'."
         }
     },
     "mounts": [

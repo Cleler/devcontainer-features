@@ -6,7 +6,16 @@
 set -e
 
 VOLUME="${SHELL_HISTORY_VOLUME:-/mnt/shell-history}"
-MAX_HISTORY_SIZE="$(cat /usr/local/share/shell-history/max-history-size 2> /dev/null || echo 10000)"
+MAX_HISTORY_SIZE="$(cat /usr/local/share/shell-history/max-history-size 2> /dev/null || echo unlimited)"
+
+# bash: a negative size means no limit. zsh has no such value: a very large one does the same.
+if [ "${MAX_HISTORY_SIZE}" = unlimited ]; then
+    BASH_SIZE=-1
+    ZSH_SIZE=1000000000
+else
+    BASH_SIZE="${MAX_HISTORY_SIZE}"
+    ZSH_SIZE="${MAX_HISTORY_SIZE}"
+fi
 BEGIN="# >>> shell-history >>>"
 END="# <<< shell-history <<<"
 
@@ -38,8 +47,8 @@ write_block() {
 }
 
 write_block "${HOME}/.bashrc" "export HISTFILE=${VOLUME}/.bash_history
-export HISTSIZE=${MAX_HISTORY_SIZE}
-export HISTFILESIZE=${MAX_HISTORY_SIZE}
+export HISTSIZE=${BASH_SIZE}
+export HISTFILESIZE=${BASH_SIZE}
 # Written after each command, not only when the shell exits
 case \"\${PROMPT_COMMAND}\" in
     *'history -a'*) ;;
@@ -48,8 +57,8 @@ esac"
 
 if command -v zsh > /dev/null 2>&1 || [ -f "${HOME}/.zshrc" ]; then
     write_block "${HOME}/.zshrc" "export HISTFILE=${VOLUME}/.zsh_history
-export HISTSIZE=${MAX_HISTORY_SIZE}
-export SAVEHIST=${MAX_HISTORY_SIZE}
+export HISTSIZE=${ZSH_SIZE}
+export SAVEHIST=${ZSH_SIZE}
 setopt INC_APPEND_HISTORY"
 fi
 

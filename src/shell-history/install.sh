@@ -12,11 +12,12 @@ if [ "$(id -u)" -ne 0 ]; then
 fi
 
 SHARE_DIR=/usr/local/share/shell-history
-MAX_HISTORY_SIZE="${MAXHISTORYSIZE:-10000}"
+MAX_HISTORY_SIZE="${MAXHISTORYSIZE:-unlimited}"
 
 case "${MAX_HISTORY_SIZE}" in
+    unlimited) ;;
     ''|*[!0-9]*)
-        echo "Invalid maxHistorySize '${MAX_HISTORY_SIZE}': a number is expected."
+        echo "Invalid maxHistorySize '${MAX_HISTORY_SIZE}': a number or 'unlimited' is expected."
         exit 1
         ;;
 esac
